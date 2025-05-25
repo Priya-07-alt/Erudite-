@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erudite+</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: #000;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .cosmic-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #000000 0%, #05103a 100%);
+            z-index: -2;
+        }
+        
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 3s infinite alternate;
+        }
+        
+        .aurora {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(57, 255, 20, 0.1) 40%,
+                rgba(57, 255, 20, 0.3) 60%,
+                rgba(123, 31, 162, 0.1) 80%,
+                rgba(123, 31, 162, 0) 100%
+            );
+            opacity: 0.6;
+            filter: blur(40px);
+            transform-origin: bottom;
+            animation: aurora-wave 15s ease-in-out infinite alternate;
+        }
+        
+        .aurora2 {
+            height: 45%;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(123, 31, 162, 0.1) 40%,
+                rgba(123, 31, 162, 0.3) 60%,
+                rgba(57, 255, 20, 0.1) 80%,
+                rgba(57, 255, 20, 0) 100%
+            );
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+        
+        .aurora3 {
+            height: 30%;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(57, 255, 20, 0.1) 30%,
+                rgba(57, 255, 20, 0.3) 50%,
+                rgba(123, 31, 162, 0.2) 70%,
+                rgba(123, 31, 162, 0) 100%
+            );
+            animation-delay: -10s;
+            animation-duration: 25s;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.3; transform: scale(0.9); }
+        }
+        
+        @keyframes aurora-wave {
+            0% {
+                transform: scaleX(1.0) translateX(-5%);
+            }
+            50% {
+                transform: scaleX(1.1) translateX(5%);
+            }
+            100% {
+                transform: scaleX(1.0) translateX(-5%);
+            }
+        }
+        
+        .side-nav {
+            position: fixed;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 10;
+        }
+        
+        .nav-button {
+            width: 180px;
+            padding: 15px;
+            background: rgba(5, 16, 58, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            color: white;
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .nav-button:hover {
+            transform: scale(1.05);
+            background: rgba(5, 16, 58, 0.9);
+            border-color: rgba(57, 255, 20, 0.6);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+        }
+        
+        .nav-button h2 {
+            font-size: 1.1rem;
+            color: #39ff14;
+            margin: 0;
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+        
+        .dashboard {
+            width: calc(100% - 230px);
+            height: calc(100vh - 60px);
+            margin-left: 80px;
+            background: rgba(5, 16, 58, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(45, 241, 10, 0.802);
+            border: 1px solid rgba(123, 31, 162, 0.2);
+            color: white;
+            max-width: 1100px;
+            overflow-y: auto;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+             margin-top: 20px;
+             margin-left: 10px;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #39ff14, #7b1fa2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .welcome-message {
+            font-size: 1.2rem;
+        }
+        
+        .search-container {
+            width: 100%;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border-radius: 30px;
+            border: 2px solid rgba(57, 255, 20, 0.3);
+            background: rgba(5, 16, 58, 0.5);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: rgba(57, 255, 20, 0.8);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+        }
+        
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(57, 255, 20, 0.8);
+            font-size: 1.2rem;
+        }
+        
+        .content-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .content-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .content-container::-webkit-scrollbar-track {
+            background: rgba(5, 16, 58, 0.3);
+            border-radius: 10px;
+        }
+        
+        .content-container::-webkit-scrollbar-thumb {
+            background: rgba(57, 255, 20, 0.5);
+            border-radius: 10px;
+        }
+        
+        .subject-category {
+            margin-bottom: 40px;
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .category-title {
+            font-size: 1.5rem;
+            color: #39ff14;
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+        
+        .view-all {
+            color: rgba(57, 255, 20, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .view-all:hover {
+            text-decoration: underline;
+            color: #39ff14;
+        }
+        
+        .textbooks-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding-bottom: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .textbooks-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .textbooks-container::-webkit-scrollbar-track {
+            background: rgba(5, 16, 58, 0.3);
+            border-radius: 10px;
+        }
+
+        .textbooks-container::-webkit-scrollbar-thumb {
+            background: rgba(57, 255, 20, 0.5);
+            border-radius: 10px;
+        }
+
+        .textbook {
+            flex: 0 0 auto;
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .textbook:hover {
+            transform: translateY(-5px);
+        }
+        
+        .textbook-cover {
+            width: 120px;
+            height: 160px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            padding: 5px;
+        }
+        
+        .textbook-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .textbook-title {
+            color: white;
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 120px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .textbook-grade {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+        }
+        
+        .logout-btn {
+            background: linear-gradient(45deg, #39ff14, #7b1fa2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+        }
+        
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(57, 255, 20, 0.3);
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-tabs::-webkit-scrollbar-track {
+            background: rgba(5, 16, 58, 0.3);
+            border-radius: 10px;
+        }
+
+        .filter-tabs::-webkit-scrollbar-thumb {
+            background: rgba(57, 255, 20, 0.5);
+            border-radius: 10px;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            background: rgba(5, 16, 58, 0.8);
+            border-radius: 20px;
+            color: white;
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-weight:500;
+            box-shadow: 0 0 8px rgba(57,255,20,0.2);
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: rgba(57, 255, 20, 0.3);
+            border-color: rgba(57, 255, 20, 1);
+            box-shadow: 0 0 12px rgba(57,255,20,0.4);
+        }
+        
+        .textbook-link {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Split view styles */
+        .split-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+            background: rgba(5, 16, 58, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .split-view-content {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pdf-container {
+            flex: 1;
+            height: 100%;
+            border-right: 2px solid rgba(57, 255, 20, 0.5);
+        }
+
+        .chatbot-container {
+            flex: 1;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            width: 90px;
+            height: 40px;
+            border-radius: 6px;
+            background: rgb(0, 2, 0);
+            border: none;
+            color: white;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1100;
+            box-shadow: 0 0 15px rgba(18, 18, 18, 0.553);
+        }
+
+        .close-button:hover {
+            background: rgb(55, 255, 20);
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.8);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .split-view-title {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #39ff14;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+            z-index: 1100;
+        }
+
+        .suggestions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: rgba(5, 16, 58, 0.95);
+    border-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.suggestions-list li {
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+}
+
+.suggestions-list li:hover {
+    background: rgba(57, 255, 20, 0.2);
+}
+    /* Extra features */
+    .icon-nav {
+  position: fixed;
+  top: 100px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 1000;
+}
+
+.icon-nav a {
+  color: #00ff99;
+  font-size: 24px;
+  text-decoration: none;
+  transition: transform 0.2s, color 0.3s;
+}
+
+.icon-nav a:hover {
+  transform: scale(1.2);
+  color: #fff;
+}
+
+.dashboard-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-left: auto;
+}
+
+.dashboard-icons i {
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.dashboard-icons i:hover {
+    color: #00ffcc;
+}
+
+
+/*Extra features */
+
+
+    </style>
+</head>
+<body>
+   
+    <div class="cosmic-bg"></div>
+    <div class="stars" id="stars"></div>
+    
+    <div class="aurora"></div>
+    <div class="aurora aurora2"></div>
+    <div class="aurora aurora3"></div>
+
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <h1>Erudite+</h1>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+            <div class="dashboard-icons">
+  <i class="fas fa-phone" title="Quick Access" onclick="location.href='quick_access.html'"></i>
+  <i class="fas fa-dharmachakra" title="Spin" onclick="location.href='spin.html'"></i>
+  <i class="fas fa-clock" title="Activity Status" onclick="location.href='activity_status.html'"></i>
+  <i class="fas fa-gamepad" title="Games" onclick="location.href='games.html'"></i>
+</div>
+
+
+            <div class="user-info">
+                <div class="user-avatar" id="user-initial">U</div>
+                <div class="welcome-message">Welcome, <span id="username">User</span>!</div>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search for textbooks, subjects...">
+            <div class="search-icon">🔍</div>
+            <ul id="suggestions" class="suggestions-list"></ul>
+            <!-- Inside index.html -->
+           
+        </div>
+        
+            
+      
+
+     
+
+
+   
+
+<div id="bookList" class="book-list">
+    <!-- Dynamically filled book items will go here -->
+      
+</div>
+
+        
+    <div class="content-container">   
+        <!-- English Category -->
+        <div class="subject-category">
+            <div class="category-header">
+                <h2 class="category-title">English</h2>
+               
+            </div>
+            
+            <div class="textbooks-container">
+                <!-- English textbooks with unique chatbot links -->
+                <div class="textbook" data-grade="Grade 6" onclick="openSplitView('https://pdfhost.io/v/tVJyD7fNTH_6th_English_Term_I_-_www_tntextbooks_in ', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502123049-D7Q0EM3Q.json')">
+                    <div class="textbook-cover">
+                        <img src="https://i0.wp.com/2ndbuys.com/wp-content/uploads/2022/12/6th-std-Tamil-English-Term-II-by-SCERT-State-Council-of-Education-Research-and-Training-Tamil-Nadu.jpg?fit=500%2C500&ssl=1" alt="Grade 6">
+                    </div>
+                    <div class="textbook-title">English</div>
+                    <div class="textbook-grade">Grade 6</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 7" onclick="openSplitView('https://pdfhost.io/v/UvfBjcVETb_7th_English_Term_I_-', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502123049-D7Q0EM3Q.json')">
+                    <div class="textbook-cover">
+                        <img src="https://5.imimg.com/data5/SELLER/Default/2021/12/JB/BB/AJ/143418189/7-fp-imresizer.jpg" alt="Grade 7">
+                    </div>
+                    <div class="textbook-title">English</div>
+                    <div class="textbook-grade">Grade 7</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 8" onclick="openSplitView('https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/8th_English_Text.pdf', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/01/15/20250501150611-ADNVUGT4.json')">
+                    <div class="textbook-cover">
+                        <img src="https://mybooksfactory.com/wp-content/uploads/2024/01/8THENGTNB.webp" alt="Grade 8">
+                    </div>
+                    <div class="textbook-title">English</div>
+                    <div class="textbook-grade">Grade 8</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 9" onclick="openSplitView('https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/9th%20English_Text.pdf', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/01/07/20250501073535-K0IYXUMY.json')">
+                    <div class="textbook-cover">
+                        <img src="https://img.clevup.in/418144/SKU-0101_0-1736511968328.jpg?width=600&format=webp" alt="Grade 9">
+                    </div>
+                    <div class="textbook-title">English</div>
+                    <div class="textbook-grade">Grade 9</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 10" onclick="openSplitView('https://pdfhost.io/v/Efdw83hQUu_10th_English_Text_www_tntextbooks_in', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/09/20250502090639-ZUMRT2XJ.json')">
+                    <div class="textbook-cover">
+                        <img src="https://m.media-amazon.com/images/I/51jwyQbr0yL.BO30,255,255,255_UF900,850_SR1910,1000,0,C_PIRIOFOURANDHALF-medium,BottomLeft,30,-20_QL100.jpg" alt="Grade 10">
+                    </div>
+                    <div class="textbook-title">English</div>
+                    <div class="textbook-grade">Grade 10</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 11" onclick="openSplitView('https://pdfhost.io/v/TpSbGn3tbG_11th_General_English_Text_www_tntextbooks_in','https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502124847-ELZTICER.json')">
+                    <div class="textbook-cover">
+                        <img src="https://i.redd.it/r9zzvj75hk891.jpg" alt="Grade 11">
+                    </div>
+                    <div class="textbook-title">English</div>
+                    <div class="textbook-grade">Grade 11</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 12"onclick="openSplitView('https://drive.google.com/file/d/1g_kjwnxfdZR-8qiCpnzxbM0HaiqUnewD/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502124847-ELZTICER.json')">
+                    <div class="textbook-cover">
+                        <img src="https://routemybook.com/uploads/productImage/product1681903914.png" alt="Grade 12">
+                    </div>
+                    <div class="textbook-title">English</div>
+                    <div class="textbook-grade">Grade 12</div>
+                </div>
+            </div>
+        </div>
+        <!-- Biology Category -->
+        <div class="subject-category">
+            <div class="category-header">
+                <h2 class="category-title">Biology</h2>
+                
+            </div>
+            
+            <div class="textbooks-container">
+                <!-- Biology textbooks with unique chatbot links -->
+              
+
+                <div class="textbook" data-grade="Grade 11" onclick="openSplitView('https://drive.google.com/file/d/1HnEbhi28vsvVIw-vW372qoS2GCKbGUre/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/03/20250504031020-AT1OM9KP.json')">
+                    <div class="textbook-cover">
+                        <img src="https://test.brainkart.com/media/subject/article-Zoology-a3K.jpg" alt="Grade 11">
+                    </div>
+                    <div class="textbook-title">Zoology</div>
+                    <div class="textbook-grade">Grade 11</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 12"onclick="openSplitView('https://drive.google.com/file/d/1ByzdNdatqAP19S1BVWaIBno-d8P1T-ns/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/04/20250504040816-JKL7X7HF.json')">
+                    <div class="textbook-cover">
+                        <img src="https://2ndbuys.com/wp-content/uploads/2024/01/12th-biology-zoology-book.jpg" alt="Grade 12">
+                    </div>
+                    <div class="textbook-title">Zoology</div>
+                    <div class="textbook-grade">Grade 12</div>
+                </div>
+            </div>
+        </div>
+        <!-- Chemistry Category -->
+        <div class="subject-category">
+            <div class="category-header">
+                <h2 class="category-title">Chemistry</h2>
+                
+            </div>
+            
+            <div class="textbooks-container">
+                <!-- Chemistry textbooks with unique chatbot links -->
+                <div class="textbook" data-grade="Grade 11" onclick="openSplitView('https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/11th_Chemistry_Vol-1_English%20Medium_Text.pdf', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/04/20250504040816-JKL7X7HF.json')">
+                    <div class="textbook-cover">
+                        <img src="https://test.brainkart.com/media/subject/article-Chemistry-eFx.png" alt="Grade 11">
+                    </div>
+                    <div class="textbook-title">Chemistry</div>
+                    <div class="textbook-grade">Grade 11 vol-I</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 12" onclick="openSplitView('https://drive.google.com/file/d/1PLUoxR0vYVewj3-CYI5L3mkXfGo4vfTy/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/04/20250504040816-JKL7X7HF.json')">
+                    <div class="textbook-cover">
+                        <img src="https://2ndbuys.com/wp-content/uploads/2024/01/Chemistry-12th-volume-1.jpg" alt="Grade 12">
+                    </div>
+                    <div class="textbook-title">Chemistry</div>
+                    <div class="textbook-grade">Grade 12 vol-I</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 11"onclick="openSplitView('https://cdn1.byjus.com/wp-content/uploads/2021/09/TN-Board-Class-11_Chemistry_Vol-2_EM.pdf', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/05/07/20250505073016-RFNH82UC.json')">
+                    <div class="textbook-cover">
+                        <img src="https://m.media-amazon.com/images/I/51kkKTZhhdL.BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100.jpg" alt="Grade 11">
+                    </div>
+                    <div class="textbook-title">Chemistry</div>
+                    <div class="textbook-grade">Grade 11 VOL-II</div>
+                </div>
+
+                <div class="textbook" data-grade="Grade 12"onclick="openSplitView('https://drive.google.com/file/d/1dSpZ8i1A4yRRUxjbz-rFQnVVdczd3uWr/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/05/07/20250505073016-RFNH82UC.json')">
+                    <div class="textbook-cover">
+                        <img src="https://2ndbuys.com/wp-content/uploads/2024/03/XIIth-STD-Volume-2-Chemistry.jpg"" alt="Grade 12">
+                    </div>
+                    <div class="textbook-title">Chemistry</div>
+                    <div class="textbook-grade">Grade 12 vol-II</div>
+                </div>
+            </div>
+        </div>
+                <!-- Physics Category -->
+                <div class="subject-category">
+                    <div class="category-header">
+                        <h2 class="category-title">Physics</h2>
+                        
+                    </div>
+                    
+                    <div class="textbooks-container">
+<!-- Physics textbooks with unique chatbot links -->
+        <div class="textbook" data-grade="Grade 11" onclick="openSplitView('https://drive.google.com/file/d/1DPKWoV1mXqLmx5Ef6LMxDcmcPML-60Mf/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/05/07/20250505073016-RFNH82UC.json')">
+                <div class="textbook-cover">
+                 <img src="https://2ndbuys.com/wp-content/uploads/2024/05/11th-Standard-Physics-Volume.jpg" alt="Grade 11">
+                        </div>
+                            <div class="textbook-title">Physics</div>
+                            <div class="textbook-grade">Grade 11 vol-I</div>
+                        </div>
+        
+                        <div class="textbook" data-grade="Grade 12"onclick="openSplitView('https://drive.google.com/file/d/15bWDPYshQStJwEHJjuN_kMJzczlQxVeE/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509165103-77X9A748.json')">
+                            <div class="textbook-cover">
+                                <img src="https://2ndbuys.com/wp-content/uploads/2024/01/12th-physics-book-volume-1-1.jpg" alt="Grade 12">
+                            </div>
+                            <div class="textbook-title">Physics</div>
+                            <div class="textbook-grade">Grade 12 vol-I</div>
+                        </div>
+        
+                        <div class="textbook" data-grade="Grade 11" onclick="openSplitView('https://drive.google.com/file/d/1IBxDpp0jqHW9v0eOyRr0_3KdrNUESE7D/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509161436-111UC4EI.json')">
+                            <div class="textbook-cover">
+                                <img src="https://s3sunokitaab.s3.ap-south-1.amazonaws.com/Thumbnails/11%20physics%20vol%202-e-tn.jpg" alt="Grade 11">
+                            </div>
+                            <div class="textbook-title">Physics</div>
+                            <div class="textbook-grade">Grade 11 vol-II</div>
+                        </div>
+        
+                        
+                    </div>
+                </div>
+                 <!-- Science Category -->
+                <div class="subject-category">
+                    <div class="category-header">
+                        <h2 class="category-title">Science</h2>
+                        
+                    </div>
+                    
+                    <div class="textbooks-container">
+<!-- Science textbooks with unique chatbot links -->
+        <div class="textbook" data-grade="Grade 6"onclick="openSplitView('https://pdfhost.io/v/CCvqRRFwqk_6th_Science_Term_I_EM_-_www_tntextbooks_in ', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509161436-111UC4EI.json')">
+                <div class="textbook-cover">
+                 <img src="https://2ndbuys.com/wp-content/uploads/2024/02/Science-and-Social-Science-6th-STD-Book.jpg" alt="Grade 6">
+                        </div>
+                            <div class="textbook-title">Science</div>
+                            <div class="textbook-grade">Grade 6 </div>
+                        </div>
+        
+                        <div class="textbook" data-grade="Grade 7"onclick="openSplitView('https://pdfhost.io/v/Cv3CeNe5Fk_Class_7_Science_English_Medium-Term_1-2024_Edition-www_tntextbooks_in', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509165103-77X9A748.json')">
+                            <div class="textbook-cover">
+                                <img src="https://2ndbuys.com/wp-content/uploads/2024/02/7th-Science-Social-Science.jpg" alt="Grade 7">
+                            </div>
+                            <div class="textbook-title">Science</div>
+                            <div class="textbook-grade">Grade 7 </div>
+                        </div>
+        
+        
+                        <div class="textbook" data-grade="Grade 9"onclick="openSplitView('https://pdfhost.io/v/zkfF8kJZdn_Class_9_Science_English_Medium-2024_Edition-www_tntextbooks_in ', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/03/20250510035311-ONH396M4.json')">
+                            <div class="textbook-cover">
+                                <img src="https://storeassets.im-cdn.com/media-manager/bookmark-it/kXyTT05qTnughS9kLS38_09%20science_0x0_webp.jpg" alt="Grade 9">
+                            </div>
+                            <div class="textbook-title">Science</div>
+                            <div class="textbook-grade">Grade 9 </div>
+                        </div>
+                        <div class="textbook"data-grade="Grade 10" onclick="openSplitView('https://drive.google.com/file/d/1vDopzkVfq8wD9ePYSaEKPOlm9bWwv2Di/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510065322-H3VNAU33.json')">
+                            <div class="textbook-cover">
+                                <img src="https://mybooksfactory.com/wp-content/uploads/2022/11/10th-Science-Book.jpg" alt="Grade 10">
+                            </div>
+                            <div class="textbook-title">Science</div>
+                            <div class="textbook-grade">Grade 10</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Maths Category -->
+                <div class="subject-category">
+                    <div class="category-header">
+                        <h2 class="category-title">Maths</h2>
+                        
+                    </div>
+                    
+                    <div class="textbooks-container">
+<!-- Science textbooks with unique chatbot links -->
+        <div class="textbook" data-grade="Grade 6"onclick="openSplitView('https://pdfhost.io/v/EgnHcDrqkZ_6th_Maths_EM_Term1_Text', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510060032-208XK07V.json')">
+                <div class="textbook-cover">
+                 <img src="https://m.media-amazon.com/images/I/41Z7tGl7MGL._AC_UF1000,1000_QL80_.jpg" alt="Grade 6">
+                        </div>
+                            <div class="textbook-title">Maths</div>
+                            <div class="textbook-grade">Grade 6 </div>
+                        </div>
+        
+                        <div class="textbook" data-grade="Grade 7"onclick="openSplitView('https://pdfhost.io/v/3UASfZpxyR_7th_Maths_EM_Term1_Text', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510060032-208XK07V.json')">
+                            <div class="textbook-cover">
+                                <img src="data:image/jpeg;base64,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" alt="Grade 7">
+                            </div>
+                            <div class="textbook-title">Maths</div>
+                            <div class="textbook-grade">Grade 7 </div>
+                        </div>
+        
+                        <div class="textbook" data-grade="Grade 8"onclick="openSplitView('https://drive.google.com/file/d/1KHgGYXd6vdTIJdnLd-9wpzAx7gZ7np9u/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510063301-SSH76E5W.json')">
+                            <div class="textbook-cover">
+                                <img src="https://storeassets.im-cdn.com/media-manager/bookmark-it/ZuqTl0l7QkGHY2Jza8on_08%20maths_0x0_webp.jpg" alt="Grade 8">
+                            </div>
+                            <div class="textbook-title">Maths</div>
+                            <div class="textbook-grade">Grade 8</div>
+                        </div>
+        
+                        <div class="textbook" data-grade="Grade 9"onclick="openSplitView('https://pdfhost.io/v/Gxnxzds4CB_9th_Maths_EM_Text', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510063301-SSH76E5W.json')">
+                            <div class="textbook-cover">
+                                <img src="https://storeassets.im-cdn.com/media-manager/bookmark-it/TsKmEcIMTWSPVeimmM8g_TN9%20Maths_0x0_webp.jpg" alt="Grade 9">
+                            </div>
+                            <div class="textbook-title">Maths</div>
+                            <div class="textbook-grade">Grade 9 </div>
+                        </div>
+                        <div class="textbook" data-grade="Grade 10" onclick="openSplitView('https://pdfhost.io/v/Tz4Ywv4ke8_10th_Mathametics_English_Medium_Text', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510060032-208XK07V.json')">
+                            <div class="textbook-cover">
+                                <img src="https://i0.wp.com/2ndbuys.com/wp-content/uploads/2024/03/10th-STD-Maths-book-Tamil.jpg?resize=768%2C1020&ssl=1" alt="Grade 10">
+                            </div>
+                            <div class="textbook-title">Maths</div>
+                            <div class="textbook-grade">Grade 10</div>
+                        </div>
+                          <div class="textbook" data-grade="Grade 11" onclick="openSplitView('https://pdfhost.io/v/aT9Y6ujHMY_11th_Maths_Vol-1_English_Medium_Text', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/03/20250510035311-ONH396M4.json')">
+                            <div class="textbook-cover">
+                                <img src="https://test.brainkart.com/media/subject/article-Maths-aXJ.jpg"" alt="Grade 11">
+                            </div>
+                            <div class="textbook-title">Maths</div>
+                            <div class="textbook-grade">Grade 11</div>
+                        </div>
+                          <div class="textbook" data-grade="Grade 12" onclick="openSplitView('https://pdfhost.io/v/YMpB4pFzjP_12th_Maths_Vol-2_English_Meduim_Text', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/03/20250510035311-ONH396M4.json')">
+                            <div class="textbook-cover">
+                                <img src="https://m.media-amazon.com/images/I/81aM1lpCT+L.AC_UF1000,1000_QL80.jpg" alt="Grade 12">
+                            </div>
+                            <div class="textbook-title">Maths</div>
+                            <div class="textbook-grade">Grade 12</div>
+                        </div>
+                    </div>
+                </div>
+        <!-- Social Science Category -->
+        <div class="subject-category">
+            <div class="category-header">
+                <h2 class="category-title">Social Science</h2>
+                
+            </div>
+            
+            <div class="textbooks-container">
+                <!-- Social Science textbooks with split view functionality -->
+                <div class="textbook" data-grade="Grade 6" onclick="openSplitView('https://drive.google.com/file/d/1S7IgubKXehoo0q9pM-uAr8UsbMXJU0lu/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/05/20250503050946-NT8PM9B6.json')">
+                    <div class="textbook-cover">
+                        <img src="https://m.media-amazon.com/images/I/5154D3yusmL.AC_UF1000,1000_QL80.jpg" alt="Grade 6">
+                    </div>
+                    <div class="textbook-title">History</div>
+                    <div class="textbook-grade">Grade 6</div>
+                </div>
+                
+                <div class="textbook" data-grade="Grade 7"onclick="openSplitView('https://drive.google.com/file/d/10uqpoZ7a8YjNGkImH4NkB5ILmO_AtTOQ/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/05/20250503050946-NT8PM9B6.json')">
+                    <div class="textbook-cover">
+                        <img src="https://online.fliphtml5.com/mlstb/rsny/files/large/1.webp?1590665536&1590665536" alt="Grade 7">
+                    </div>
+                    <div class="textbook-title">Geography</div>
+                    <div class="textbook-grade">Grade 7</div>
+                </div>
+                
+                <div class="textbook" data-grade="Grade 8" onclick="openSplitView('https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/8th_Social%20Science%20_EM%20_Text.pdf', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/11/20250503115302-8MHPZSY8.json')">
+                    <div class="textbook-cover">
+                        <img src="https://mybooksfactory.com/wp-content/uploads/2024/01/08-social.webp" alt="Grade 8">
+                    </div>
+                    <div class="textbook-title">Civics</div>
+                    <div class="textbook-grade">Grade 8</div>
+                </div>
+                
+                <div class="textbook" data-grade="Grade 9" onclick="openSplitView('https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/8th_Social%20Science%20_EM%20_Text.pdf', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/11/20250503115302-8MHPZSY8.json')">
+                    <div class="textbook-cover">
+                        <img src="https://mybooksfactory.com/wp-content/uploads/2024/01/09-social.webp" alt="Grade 9">
+                    </div>
+                    <div class="textbook-title">Civics</div>
+                    <div class="textbook-grade">Grade 9</div>
+                </div>
+                
+                <div class="textbook" data-grade="Grade 10"onclick="openSplitView('https://drive.google.com/file/d/14gfmI5kkfCtenxjDAb1DQZqbJ6qF0Qra/preview', 'https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/05/20250503050946-NT8PM9B6.json')">
+                    <div class="textbook-cover">
+                        <img src="https://mybooksfactory.com/wp-content/uploads/2022/11/10th-Social-Book.jpg" alt="Grade 10">
+                    </div>
+                    <div class="textbook-title">Economics</div>
+                    <div class="textbook-grade">Grade 10</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+    <!-- Split View Container (Hidden by default) -->
+    <div id="splitView" class="split-view">
+        <button class="close-button" onclick="closeSplitView()">✕</button>
+        <div class="split-view-title" id="splitViewTitle">Textbook with AI Assistant</div>
+        <div class="split-view-content">
+            <div class="pdf-container" id="pdfContainer">
+                <!-- PDF will be loaded here -->
+            </div>
+            <div class="chatbot-container" id="chatbotContainer">
+                <!-- Chatbot iframe will be loaded here -->
+            </div>
+        </div>
+    </div>
+  
+     <div class="nav-buttons">
+  
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+
+    <script>
+ 
+
+const items = [
+    "History Grade 6", "Geography Grade 7", "Civics Grade 8",
+    "Civics Grade 9", "Economics Grade 10","English Grade 6","English Grade 7","English Grade 8","English Grade 9"
+    ,"English Grade 10","English Grade 11","English Grade 12","Zoology Grade 12","Zoology Grade 11",
+   "Chemistry Grade 11 volume 1","Chemistry 12 volume 1","Chemistry Grade 11 volume 2",
+    "Chemistry Grade 12 volume 2","Physics Grade 11 volume 1","Physics Grade 12 volume 1",
+    "Physics Grade 11 volume 2","Science Grade 6","Science Grade 7",
+   "Science Grade 9","Science Grade 10","Maths Grade 6","Maths Grade 7","Maths Grade 8","Maths Grade 9",
+    "Maths Grade 10","Maths Grade 11","Maths Grade 12"
+    
+    // Add more titles here as needed
+];
+
+const bookData = {
+    "History Grade 6": {
+        pdfUrl: "https://drive.google.com/file/d/1S7IgubKXehoo0q9pM-uAr8UsbMXJU0lu/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/05/20250503050946-NT8PM9B6.json"
+    },
+    "Geography Grade 7": {
+        pdfUrl: "https://drive.google.com/file/d/10uqpoZ7a8YjNGkImH4NkB5ILmO_AtTOQ/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/05/20250503050946-NT8PM9B6.json"
+    },
+    "Civics Grade 8": {
+        pdfUrl: "https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/8th_Social%20Science%20_EM%20_Text.pdf",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/11/20250503115302-8MHPZSY8.json"
+    },
+    "Civics Grade 9": {
+        pdfUrl: "https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/8th_Social%20Science%20_EM%20_Text.pdf",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/11/20250503115302-8MHPZSY8.json"
+    },
+    "Economics Grade 10": {
+        pdfUrl: "https://drive.google.com/file/d/14gfmI5kkfCtenxjDAb1DQZqbJ6qF0Qra/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/03/05/20250503050946-NT8PM9B6.json"
+    },
+    // English
+     "English Grade 6": {
+        pdfUrl: "https://drive.google.com/file/d/1i4TnrYj6jJFjyRFb0sVjrH7hlGCRMdlr/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502123049-D7Q0EM3Q.json"
+    },
+
+     "English Grade 7": {
+        pdfUrl: "https://drive.google.com/file/d/1OaQzVZta5Mr_fRVleWOxt1mEEJW070-P/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502123049-D7Q0EM3Q.json')"
+    },
+     "English Grade 8": {
+        pdfUrl: "https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/8th_English_Text.pdf",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/01/15/20250501150611-ADNVUGT4.json"
+    },
+     "English Grade 9": {
+        pdfUrl: "https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/9th%20English_Text.pdf",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/01/07/20250501073535-K0IYXUMY.json"
+    },
+     "English Grade 10": {
+        pdfUrl: "https://drive.google.com/file/d/1vRhle32ISOhkYVJ71bnH0GYFG9-AF2Rm/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/09/20250502090639-ZUMRT2XJ.json"
+    },
+     "English Grade 11": {
+        pdfUrl: "https://drive.google.com/file/d/1WqZ7nRB_xI_KXPFvxIRR4PSWZ0Ooil6n/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502124847-ELZTICER.json"
+    },
+     "English Grade 12": {
+        pdfUrl: "https://drive.google.com/file/d/1g_kjwnxfdZR-8qiCpnzxbM0HaiqUnewD/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502124847-ELZTICER.json"
+    },
+
+    //  Biology 
+     "Botany Grade 11": {
+        pdfUrl: "https://drive.google.com/file/d/1dkIxzy_ahn_21KpZaIU5XgmLDG36sWFU/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502123049-D7Q0EM3Q.json"
+    },
+     "Botany Grade 12": {
+        pdfUrl: "https://drive.google.com/file/d/1Jvi3sn6PnPjTR4bWf7Z9o7HBZcF8l4iJ/view",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/12/20250502123049-D7Q0EM3Q.json"
+    },
+     "Zoology Grade 11": {
+        pdfUrl: "https://drive.google.com/file/d/1HnEbhi28vsvVIw-vW372qoS2GCKbGUre/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/03/20250504031020-AT1OM9KP.json"
+    },
+     "Zoology Grade 12": {
+        pdfUrl: "https://drive.google.com/file/d/1ByzdNdatqAP19S1BVWaIBno-d8P1T-ns/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/04/20250504040816-JKL7X7HF.json"
+    },
+
+    // Chemistry
+
+       "Chemistry Grade 11 Volume 1": {
+        pdfUrl: "https://d1e5r329t7a85t.cloudfront.net/syllabuspdf/11th_Chemistry_Vol-1_English%20Medium_Text.pdf",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/04/20250504040816-JKL7X7HF.json"
+    },
+     "Chemistry Grade 12 Volume 1": {
+        pdfUrl: "https://drive.google.com/file/d/1PLUoxR0vYVewj3-CYI5L3mkXfGo4vfTy/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/05/07/20250505073016-RFNH82UC.json"
+    },
+     "Chemistry Grade 11 Volume 2": {
+        pdfUrl: "https://cdn1.byjus.com/wp-content/uploads/2021/09/TN-Board-Class-11_Chemistry_Vol-2_EM.pdf",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/04/03/20250504031020-AT1OM9KP.json"
+    },
+     "Chemistry Grade 12 Volume 2": {
+        pdfUrl: "https://drive.google.com/file/d/1dSpZ8i1A4yRRUxjbz-rFQnVVdczd3uWr/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/05/07/20250505073016-RFNH82UC.json"
+    },
+    // Physics
+      "Physics Grade 11 Volume 1": {
+        pdfUrl: "https://drive.google.com/file/d/1DPKWoV1mXqLmx5Ef6LMxDcmcPML-60Mf/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/05/07/20250505073016-RFNH82UC.json"
+    },
+     "Physics Grade 12 Volume 1": {
+        pdfUrl: "https://drive.google.com/file/d/15bWDPYshQStJwEHJjuN_kMJzczlQxVeE/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509165103-77X9A748.json"
+    },
+     "Physics Grade 11 Volume 2": {
+        pdfUrl: "https://drive.google.com/file/d/1IBxDpp0jqHW9v0eOyRr0_3KdrNUESE7D/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509161436-111UC4EI.json"
+    },
+     "Physics Grade 12 Volume 2": {
+        pdfUrl: "https://drive.google.com/file/d/1tzKgItxkklg0DgwmY3sGHtUiKnVXlesZ/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/01/07/20250501073535-K0IYXUMY.json"
+    },
+    // Science
+      "Science Grade 6": {
+        pdfUrl: "https://drive.google.com/file/d/1QN43XFCd7b7EyHAR3lI1r-b0b4GEVfBz/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509161436-111UC4EI.json"
+    },
+     "Science Grade 7": {
+        pdfUrl: "https://drive.google.com/file/d/1HsQiql0QfO3AkhvFqBk0H3em6ZtmS6RP/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509165103-77X9A748.json"
+    },
+     "Science Grade 8": {
+        pdfUrl: "https://drive.google.com/file/d/1GVktZteeSA3M4gzzFt_fyYeYVo4rUUYH/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/09/16/20250509161436-111UC4EI.json"
+    },
+     "Science Grade 9": {
+        pdfUrl: "https://drive.google.com/file/d/18aSmG7D73Io8W6bfdleS3lMnQOKEavhi/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/03/20250510035311-ONH396M4.json"
+    },
+    
+    "Science Grade 10": {
+         pdfUrl: "https://drive.google.com/file/d/1vDopzkVfq8wD9ePYSaEKPOlm9bWwv2Di/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510065322-H3VNAU33.json"
+    },
+
+    // Maths 
+
+    "Maths Grade 6": {
+        pdfUrl: "https://drive.google.com/file/d/1LZmQZBCxNvhVdJvnCJMXf3mZRdn7bWIs/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510060032-208XK07V.json"
+    },
+     "Maths Grade 7": {
+        pdfUrl: "'https://drive.google.com/file/d/1IACLkw6z36v65NwcMHHCywGBsXCxBXDV/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510060032-208XK07V.json"
+    },
+     "Maths Grade 8": {
+        pdfUrl: "https://drive.google.com/file/d/1KHgGYXd6vdTIJdnLd-9wpzAx7gZ7np9u/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510063301-SSH76E5W.json"
+    },
+     "Maths Grade 9": {
+        pdfUrl: "https://drive.google.com/file/d/1KFklSnluGX-kNniJCcHImqVt0Jrwldif/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510063301-SSH76E5W.json"
+    },
+    
+    "Maths Grade 10": {
+         pdfUrl: "https://drive.google.com/file/d/1FJU1vLgRrGwtrvLAW4e5NgmRjkPZMYFN/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/06/20250510060032-208XK07V.json"
+    },
+
+     "Maths Grade 11": {
+        pdfUrl: "https://drive.google.com/file/d/1vnUcwPU-3YhiDLu-7C783zHIFVmNh5d3/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/03/20250510035311-ONH396M4.json"
+    },
+    
+    "Maths Grade 12": {
+         pdfUrl: "https://drive.google.com/file/d/1oe7oKnbaCnxtlNHvDnAFXapxSpNCxH0i/preview",
+        chatbotUrl: "https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/10/03/20250510035311-ONH396M4.json"
+    },
+};
+
+const starsContainer = document.getElementById('stars');
+const starCount = 100;
+for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.width = `${Math.random() * 2 + 1}px`;
+    star.style.height = star.style.width;
+    star.style.animationDelay = `${Math.random() * 5}s`;
+    starsContainer.appendChild(star);
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get('username') || 'Guest';
+document.getElementById('username').textContent = username;
+document.getElementById('user-initial').textContent = username.charAt(0);
+
+function openSplitView(pdfUrl, chatbotUrl, title = "Textbook with AI Assistant") {
+    document.getElementById('splitView').style.display = 'block';
+    document.getElementById('splitViewTitle').textContent = title;
+    document.getElementById('pdfContainer').innerHTML = `<iframe src="${pdfUrl}" title="${title}"></iframe>`;
+    document.getElementById('chatbotContainer').innerHTML = `<iframe src="${chatbotUrl}" title="RAG Chatbot"></iframe>`;
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSplitView() {
+    document.getElementById('splitView').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+const filterTabs = document.querySelectorAll('.filter-tab');
+filterTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        filterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+    });
+});
+
+const searchInput = document.querySelector('.search-bar');
+const suggestionBox = document.getElementById('suggestions');
+
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    suggestionBox.innerHTML = '';
+    if (query.trim() === '') return;
+
+    const matches = items.filter(item =>
+        item.toLowerCase().includes(query)
+    );
+
+    matches.forEach(book => {
+        const li = document.createElement('li');
+        li.textContent = book;
+        li.style.cursor = 'pointer';
+        li.addEventListener('click', () => {
+            const bookInfo = bookData[book];
+            if (bookInfo) {
+                openSplitView(bookInfo.pdfUrl, bookInfo.chatbotUrl, book);
+            } else {
+                alert('This book is not yet linked.');
+            }
+            suggestionBox.innerHTML = '';
+        });
+        suggestionBox.appendChild(li);
+    });
+});
+
+
+const searchBox = document.getElementById('searchBox');
+const suggestionsList = document.getElementById('suggestionsList');
+const pdfViewer = document.getElementById('pdfViewer');
+const chatbotFrame = document.getElementById('chatbotFrame');
+const bookViewer = document.getElementById('bookViewer');
+
+// Show matching items as suggestions
+
+searchBox.addEventListener('input', () => {
+  const input = searchBox.value.toLowerCase();
+  suggestionsList.innerHTML = '';
+  const matches = items.filter(item => item.toLowerCase().includes(input));
+  
+  matches.forEach(match => {
+    const li = document.createElement('li');
+    li.textContent = match;
+    li.style.cursor = 'pointer';
+    li.onclick = () => displayBook(match);
+    suggestionsList.appendChild(li);
+  });
+});
+
+// Display selected book
+function displayBook(title) {
+  const book = bookData[title];
+  if (book) {
+    pdfViewer.src = book.pdfUrl;
+    chatbotFrame.src = book.chatbotUrl;
+    bookViewer.style.display = 'block';
+    suggestionsList.innerHTML = '';
+    searchBox.value = title;
+  } else {
+    alert("Book data not found.");
+  }
+}
+
+
+const bookCards = document.querySelectorAll('.filter-tab');
+
+filterTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Toggle active state
+        filterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const selectedGrade = tab.textContent.trim();
+
+        bookCards.forEach(card => {
+            const cardGrade = card.getAttribute('data-grade');
+
+            if (selectedGrade === "All" || cardGrade === selectedGrade) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+});
+
+
+  function logout() {
+    // Clear localStorage (or sessionStorage if used)
+    localStorage.clear();
+
+    // Redirect to login page
+    window.location.href = "dashboard.html"; // Change this if your login file has a different name
+  }
+
+
+    </script>
+    
+</body>
+</html>

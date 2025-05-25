@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Games</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+      }
+      
+      body {
+        min-height: 100vh;
+        position: relative;
+      }
+      
+      .cosmic-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, #000000 0%, #05103a 100%);
+        z-index: -2;
+      }
+      
+      .stars {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+      
+      .star {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: twinkle 3s infinite alternate;
+      }
+      
+      .aurora {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(57, 255, 20, 0.1) 40%,
+          rgba(57, 255, 20, 0.3) 60%,
+          rgba(123, 31, 162, 0.1) 80%,
+          rgba(123, 31, 162, 0) 100%
+        );
+        opacity: 0.6;
+        filter: blur(40px);
+        transform-origin: bottom;
+        animation: aurora-wave 15s ease-in-out infinite alternate;
+        z-index: -1;
+      }
+      
+      .aurora2 {
+        height: 45%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(123, 31, 162, 0.1) 40%,
+          rgba(123, 31, 162, 0.3) 60%,
+          rgba(57, 255, 20, 0.1) 80%,
+          rgba(57, 255, 20, 0) 100%
+        );
+        animation-delay: -5s;
+        animation-duration: 20s;
+      }
+      
+      .aurora3 {
+        height: 30%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(57, 255, 20, 0.1) 30%,
+          rgba(57, 255, 20, 0.3) 50%,
+          rgba(123, 31, 162, 0.2) 70%,
+          rgba(123, 31, 162, 0) 100%
+        );
+        animation-delay: -10s;
+        animation-duration: 25s;
+      }
+      
+      @keyframes twinkle {
+        0% { opacity: 0.2; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0.3; transform: scale(0.9); }
+      }
+      
+      @keyframes aurora-wave {
+        0% {
+          transform: scaleX(1.0) translateX(-5%);
+        }
+        50% {
+          transform: scaleX(1.1) translateX(5%);
+        }
+        100% {
+          transform: scaleX(1.0) translateX(-5%);
+        }
+      }
+      
+      .game-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 1rem;
+        color: white;
+        overflow-y: auto;
+        
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        text-align: center;
+        text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+      }
+      
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+        max-width: 800px;
+        width: 100%;
+      }
+      
+      .category-card {
+        background: rgba(5, 16, 58, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+        border: 1px solid rgba(123, 31, 162, 0.2);
+      }
+      
+      h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: white;
+        text-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+      }
+      
+      .difficulty-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        width: 100%;
+      }
+      
+      .btn {
+        font-weight: 600;
+        border: none;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: linear-gradient(45deg, #39ff14, #7b1fa2);
+        color: white;
+      }
+      
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(57, 255, 20, 0.3);
+      }
+      
+      .btn-easy {
+        background: linear-gradient(45deg, #39ff14, #1fa27b);
+      }
+      
+      .btn-medium {
+        background: linear-gradient(45deg, #f59e0b, #7b1fa2);
+      }
+      
+      .btn-hard {
+        background: linear-gradient(45deg, #ef4444, #7b1fa2);
+      }
+      
+      .btn-primary {
+        background: linear-gradient(45deg, #39ff14, #7b1fa2);
+        color: white;
+        font-size: 1rem;
+        padding: 0.75rem 1.5rem;
+      }
+      
+      .btn-primary:hover {
+        box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+      }
+      
+      .btn-outline {
+        background: transparent;
+        border: 1px solid rgba(57, 255, 20, 0.6);
+        color: white;
+      }
+      
+      .btn-outline:hover {
+        background: rgba(57, 255, 20, 0.1);
+      }
+      
+      .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: rgba(5, 16, 58, 0.3);
+        backdrop-filter: blur(10px);
+        border-radius: 0.5rem;
+        border: 1px solid rgba(123, 31, 162, 0.2);
+      }
+      
+      .game-stats {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .game-stat {
+        display: flex;
+        align-items: center;
+      }
+      
+      .stat-icon {
+        background-color: rgba(57, 255, 20, 0.2);
+        border-radius: 50%;
+        padding: 0.25rem;
+        margin-right: 0.5rem;
+      }
+      
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        width: 100%;
+        max-width: 1200px;
+        padding-bottom: 2rem;
+      }
+      
+      .memory-card {
+        aspect-ratio: 1/1;
+        min-width: 0;
+        background: rgba(5, 16, 58, 0.3);
+        backdrop-filter: blur(10px);
+        border-radius: 0.5rem;
+        box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+        border: 1px solid rgba(123, 31, 162, 0.2);
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .memory-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+      }
+      
+      .memory-card.matched {
+        opacity: 0.6;
+      }
+      
+      .memory-card.selected {
+        box-shadow: 0 0 0 4px #39ff14;
+      }
+      
+      .card-content {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        text-align: center;
+      }
+      
+      .card-emoji {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 10px rgba(123, 31, 162, 0.5);
+      }
+      
+      .card-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: white;
+      }
+      
+      .card-description {
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        overflow-y: auto;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        display: none;
+      }
+      
+      .selected .card-description,
+      .matched .card-description {
+        display: -webkit-box;
+      }
+      
+      .results-card {
+        background: rgba(5, 16, 58, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        max-width: 450px;
+        width: 100%;
+        box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+        border: 1px solid rgba(123, 31, 162, 0.2);
+      }
+      
+      .results-stats {
+        background: rgba(5, 16, 58, 0.5);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        margin: 1.5rem 0;
+        border: 1px solid rgba(57, 255, 20, 0.2);
+      }
+      
+      .results-buttons {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .back-button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+      }
+      
+      .back-button:hover {
+        background-color: rgba(57, 255, 20, 0.1);
+      }
+      
+      @media (max-width: 768px) {
+        .cards-grid {
+          gap: 0.5rem;
+        }
+  
+        .card-emoji {
+          font-size: 2rem;
+        }
+  
+        .card-title {
+          font-size: 1rem;
+        }
+        }
+
+      @media (max-width: 480px) {
+        .cards-grid {
+          gap: 0.25rem;
+        }
+  
+        .card-emoji {
+          font-size: 1.5rem;
+        }
+  
+        .card-title {
+          font-size: 0.8rem;
+        }
+  
+        .card-description {
+          display: none !important;
+        }
+      }
+      .hidden {
+        display: none;
+      }
+      .back-button1 {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      padding: 8px 15px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .back-button1:hover {
+      background-color: rgba(57, 255, 20, 0.3);
+      transform: scale(1.05);
+    }
+      
+    </style>
+  </head>
+  <body>
+    <div class="cosmic-bg"></div>
+    <div class="stars" id="stars"></div>
+    <div class="aurora"></div>
+    <div class="aurora aurora2"></div>
+    <div class="aurora aurora3"></div>
+    
+    <div id="gameContainer" class="game-container">
+      <div id="startScreen">
+        <a href="index.html" class="back-button1">← Back</a>
+        <h1>Memory Game</h1>
+        <div class="category-grid">
+          <div class="category-card">
+            <h3>Periodic Table Challenge</h3>
+            <div class="difficulty-buttons">
+              <button class="btn btn-easy" data-category="Periodic Table" data-difficulty="easy">Easy</button>
+              <button class="btn btn-medium" data-category="Periodic Table" data-difficulty="medium">Medium</button>
+              <button class="btn btn-hard" data-category="Periodic Table" data-difficulty="hard">Hard</button>
+            </div>
+          </div>
+          <div class="category-card">
+            <h3>Space Exploration Challenge</h3>
+            <div class="difficulty-buttons">
+              <button class="btn btn-easy" data-category="Space Exploration" data-difficulty="easy">Easy</button>
+              <button class="btn btn-medium" data-category="Space Exploration" data-difficulty="medium">Medium</button>
+              <button class="btn btn-hard" data-category="Space Exploration" data-difficulty="hard">Hard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="playingScreen" class="hidden">
+        <div class="game-header">
+          <div class="game-category">
+            <button id="backButton" class="back-button">
+              ← Back
+            </button>
+            <span id="categoryTitle"></span>
+          </div>
+          <div class="game-stats">
+            <div class="game-stat">
+              <span class="stat-icon">⏱️</span>
+              <span>Time: <span id="timerDisplay">0</span>s</span>
+            </div>
+            <div class="game-stat">
+              <span class="stat-icon">🎯</span>
+              <span>Attempts: <span id="attemptsDisplay">0</span></span>
+            </div>
+            <div id="bestTimeContainer" class="game-stat hidden">
+              <span class="stat-icon">🏆</span>
+              <span>Best: <span id="bestTimeDisplay">0</span>s</span>
+            </div>
+          </div>
+        </div>
+        <div id="cardsGrid" class="cards-grid"></div>
+      </div>
+      
+      <div id="completedScreen" class="hidden">
+        <div class="results-card">
+          <h2 style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);">🏆 Congratulations!</h2>
+          <p style="font-size: 1.5rem; margin-bottom: 1.5rem;">You completed the <span id="completedCategoryTitle"></span> Challenge</p>
+          
+          <div class="results-stats">
+            <p style="font-size: 1.25rem; margin-bottom: 0.5rem;">Time: <span id="completedTime"></span> seconds</p>
+            <p style="font-size: 1.25rem;">Attempts: <span id="completedAttempts"></span></p>
+          </div>
+          
+          <div class="results-buttons">
+            <button id="playAgainButton" class="btn btn-primary">Play Again</button>
+            <button id="newCategoryButton" class="btn btn-outline">Try Another Category</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Game data
+      const scienceCategories = {
+        'Periodic Table': [
+          { id: 'H', name: 'Hydrogen', description: 'Lightest element, key to understanding atomic structure', emoji: '⚛️' },
+          { id: 'O', name: 'Oxygen', description: 'Essential for life, makes up about 21% of Earth\'s atmosphere', emoji: '🌬️' },
+          { id: 'Fe', name: 'Iron', description: 'Critical in hemoglobin, fundamental to many industrial processes', emoji: '🔧' },
+          { id: 'Au', name: 'Gold', description: 'Rare metal with unique properties, highly valued in science and culture', emoji: '💫' },
+          { id: 'Cu', name: 'Copper', description: 'Excellent conductor of electricity, used in multiple technologies', emoji: '🔌' },
+          { id: 'C', name: 'Carbon', description: 'Basis of all known life, forms countless compounds', emoji: '🌿' },
+          { id: 'Na', name: 'Sodium', description: 'Reactive metal found in table salt, essential for life', emoji: '🧂' },
+          { id: 'Cl', name: 'Chlorine', description: 'Powerful disinfectant, crucial in water treatment', emoji: '💧' }
+        ],
+        'Space Exploration': [
+          { id: 'moon', name: 'Moon', description: 'Earth\'s only natural satellite, first celestial body humans walked on', emoji: '🌕' },
+          { id: 'mars', name: 'Mars', description: 'The Red Planet, focus of human exploration and potential colonization', emoji: '🔴' },
+          { id: 'iss', name: 'International Space Station', description: 'Continuous human presence in space since 2000', emoji: '🛰️' },
+          { id: 'hubble', name: 'Hubble Telescope', description: 'Revolutionary space observatory revealing universe\'s mysteries', emoji: '🔭' },
+          { id: 'voyager', name: 'Voyager Probes', description: 'Farthest human-made objects from Earth, exploring interstellar space', emoji: '🚀' },
+          { id: 'saturn', name: 'Saturn', description: 'Known for its spectacular ring system, sixth planet from the Sun', emoji: '💍' },
+          { id: 'sun', name: 'Sun', description: 'Massive star at the center of our solar system, source of energy', emoji: '☀️' },
+          { id: 'comet', name: 'Comet', description: 'Icy celestial object that develops a coma or tail when near the Sun', emoji: '☄️' }
+        ]
+      };
+
+      // Game state
+      let gameState = 'start';
+      let selectedCategory = null;
+      let difficulty = 'medium';
+      let cards = [];
+      let selectedCards = [];
+      let matchedCards = [];
+      let attempts = 0;
+      let timer = 0;
+      let bestTimes = {};
+      let timerInterval = null;
+      
+      // DOM elements
+      const gameContainer = document.getElementById('gameContainer');
+      const startScreen = document.getElementById('startScreen');
+      const playingScreen = document.getElementById('playingScreen');
+      const completedScreen = document.getElementById('completedScreen');
+      const categoryTitle = document.getElementById('categoryTitle');
+      const completedCategoryTitle = document.getElementById('completedCategoryTitle');
+      const timerDisplay = document.getElementById('timerDisplay');
+      const attemptsDisplay = document.getElementById('attemptsDisplay');
+      const bestTimeContainer = document.getElementById('bestTimeContainer');
+      const bestTimeDisplay = document.getElementById('bestTimeDisplay');
+      const completedTime = document.getElementById('completedTime');
+      const completedAttempts = document.getElementById('completedAttempts');
+      const cardsGrid = document.getElementById('cardsGrid');
+      const backButton = document.getElementById('backButton');
+      const playAgainButton = document.getElementById('playAgainButton');
+      const newCategoryButton = document.getElementById('newCategoryButton');
+      
+      // Initialize cosmic background
+      function createStars() {
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+          const star = document.createElement('div');
+          star.className = 'star';
+          star.style.width = Math.random() * 3 + 'px';
+          star.style.height = star.style.width;
+          star.style.left = Math.random() * 100 + '%';
+          star.style.top = Math.random() * 100 + '%';
+          star.style.animationDuration = Math.random() * 3 + 2 + 's';
+          stars.appendChild(star);
+        }
+      }
+      
+      // Initialize cosmic background
+      createStars();
+      
+      // Initialize difficulty buttons
+      document.querySelectorAll('.difficulty-buttons button').forEach(button => {
+        button.addEventListener('click', () => {
+          const category = button.dataset.category;
+          const difficultyLevel = button.dataset.difficulty;
+          startGame(category, difficultyLevel);
+        });
+      });
+      
+      // Button event listeners
+      backButton.addEventListener('click', returnToStart);
+      playAgainButton.addEventListener('click', restartGame);
+      newCategoryButton.addEventListener('click', returnToStart);
+      
+      // Game functions
+      function prepareCards(category, difficultyLevel = 'medium') {
+        // Get cards for selected category
+        const categoryCards = scienceCategories[category];
+  
+        // Define game configurations for each difficulty
+        const difficultyConfig = {
+          'easy': {
+            pairs: 4,     // 4 pairs (8 total cards)
+            cols: 2       // 2 columns (2x4 grid)
+          },
+          'medium': {
+            pairs: 6,     // 6 pairs (12 total cards)
+            cols: 3       // 3 columns (3x4 grid)
+          },
+          'hard': {
+            pairs: 8,     // 8 pairs (16 total cards)
+            cols: 4       // 4 columns (4x4 grid)
+          }
+        };
+  
+        const config = difficultyConfig[difficultyLevel];
+  
+        // Select unique cards
+        const selectedUniqueCards = [...categoryCards]
+          .sort(() => 0.5 - Math.random())
+          .slice(0, config.pairs);
+  
+        // Create pairs and assign unique IDs
+        const duplicatedCards = [...selectedUniqueCards, ...selectedUniqueCards]
+          .map((card, index) => ({
+            ...card,
+            uniqueId: `${card.id}-${index}`
+          }));
+  
+        // Shuffle cards using Fisher-Yates algorithm
+        for (let i = duplicatedCards.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [duplicatedCards[i], duplicatedCards[j]] = [duplicatedCards[j], duplicatedCards[i]];
+        }
+  
+        // Return both cards and layout configuration
+        return {
+          cards: duplicatedCards,
+          cols: config.cols,
+          rows: Math.ceil(duplicatedCards.length / config.cols)
+        };
+      }
+      
+      function startGame(category, difficultyLevel = 'medium') {
+        // Set up game state
+        selectedCategory = category;
+        difficulty = difficultyLevel;
+  
+        // Get cards and layout configuration
+        const { cards: preparedCards, cols } = prepareCards(category, difficultyLevel);
+        cards = preparedCards;
+        selectedCards = [];
+        matchedCards = [];
+        attempts = 0;
+        timer = 0;
+  
+        // Update grid layout
+        cardsGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        
+        // Clear any existing timer
+        clearInterval(timerInterval);
+        
+        // Start the timer
+        timerInterval = setInterval(() => {
+          timer++;
+          timerDisplay.textContent = timer;
+        }, 1000);
+        
+        // Show best time if available
+        const bestTimeKey = `${selectedCategory}-${difficulty}`;
+        if (bestTimes[bestTimeKey]) {
+          bestTimeDisplay.textContent = bestTimes[bestTimeKey];
+          bestTimeContainer.classList.remove('hidden');
+        } else {
+          bestTimeContainer.classList.add('hidden');
+        }
+  
+        updateGameState('playing');
+        renderCards();
+        updateDisplay();
+      }
+      
+      function handleCardSelect(card) {
+        // Prevent selecting matched or already selected cards
+        if (
+          matchedCards.some(matched => matched.uniqueId === card.uniqueId) ||
+          selectedCards.some(selected => selected.uniqueId === card.uniqueId) ||
+          selectedCards.length >= 2
+        ) return;
+        
+        selectedCards.push(card);
+        renderCards();
+        
+        // Check for match when selecting second card
+        if (selectedCards.length === 2) {
+          attempts++;
+          updateDisplay();
+          
+          setTimeout(() => {
+            if (selectedCards[0].id === selectedCards[1].id) {
+              // Match found
+              matchedCards = [...matchedCards, ...selectedCards];
+              selectedCards = [];
+              renderCards();
+              
+              // Check for game completion
+              if (matchedCards.length === cards.length) {
+                endGame();
+              }
+            } else {
+              // No match
+              selectedCards = [];
+              renderCards();
+            }
+          }, 1000);
+        }
+      }
+      
+      function renderCards() {
+        cardsGrid.innerHTML = '';
+        
+        cards.forEach(card => {
+          const isSelected = selectedCards.some(selected => selected.uniqueId === card.uniqueId);
+          const isMatched = matchedCards.some(matched => matched.uniqueId === card.uniqueId);
+          
+          const cardElement = document.createElement('div');
+          cardElement.className = `memory-card ${isSelected ? 'selected' : ''} ${isMatched ? 'matched' : ''}`;
+          cardElement.addEventListener('click', () => handleCardSelect(card));
+          
+          cardElement.innerHTML = `
+            <div class="card-content">
+              ${isSelected || isMatched ? `
+                <span class="card-emoji">${card.emoji}</span>
+                <h3 class="card-title">${card.name}</h3>
+                <p class="card-description">${card.description}</p>
+              ` : `
+                <span class="card-emoji">❓</span>
+                <h3 class="card-title">Science Card</h3>
+              `}
+            </div>
+          `;
+          
+          cardsGrid.appendChild(cardElement);
+        });
+      }
+      
+      function updateDisplay() {
+        categoryTitle.textContent = `${selectedCategory} - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`;
+        attemptsDisplay.textContent = attempts;
+        timerDisplay.textContent = timer;
+      }
+      
+      function endGame() {
+        clearInterval(timerInterval);
+        
+        // Update best time
+        const bestTimeKey = `${selectedCategory}-${difficulty}`;
+        if (!bestTimes[bestTimeKey] || timer < bestTimes[bestTimeKey]) {
+          bestTimes[bestTimeKey] = timer;
+        }
+        
+        // Update completion screen
+        completedCategoryTitle.textContent = `${selectedCategory} (${difficulty})`;
+        completedTime.textContent = timer;
+        completedAttempts.textContent = attempts;
+        
+        updateGameState('completed');
+      }
+      
+      function restartGame() {
+        if (selectedCategory) {
+          startGame(selectedCategory, difficulty);
+        } else {
+          updateGameState('start');
+        }
+      }
+      
+      function returnToStart() {
+        clearInterval(timerInterval);
+        updateGameState('start');
+      }
+      
+      function updateGameState(state) {
+        gameState = state;
+        
+        // Hide all screens
+        startScreen.classList.add('hidden');
+        playingScreen.classList.add('hidden');
+        completedScreen.classList.add('hidden');
+        
+        // Show appropriate screen
+        if (state === 'start') {
+          startScreen.classList.remove('hidden');
+        } else if (state === 'playing') {
+          playingScreen.classList.remove('hidden');
+        } else if (state === 'completed') {
+          completedScreen.classList.remove('hidden');
+        }
+      }
+    </script>
+  </body>
+</html>

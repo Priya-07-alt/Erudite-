@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quick Access</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #000000 0%, #05103a 100%);
+      overflow: hidden;
+      color: #fcfffc;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      overflow: hidden;
+      background: linear-gradient(to bottom, 
+                rgba(0, 0, 0, 0) 0%,
+                rgba(123, 31, 162, 0.1) 40%,
+                rgba(123, 31, 162, 0.3) 60%,
+                rgba(57, 255, 20, 0.1) 80%,
+                rgba(57, 255, 20, 0) 100%);
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      opacity: 0.5;
+      animation: twinkle 2s infinite alternate, moveStar 60s linear infinite;
+    }
+
+    @keyframes twinkle {
+      from { opacity: 0.2; }
+      to { opacity: 1; }
+    }
+
+    @keyframes moveStar {
+      from { transform: translate(0, 0); }
+      to { transform: translate(100px, 100px); }
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      padding: 40px;
+      gap: 30px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .sidebar {
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      text-shadow: 0 0 10px #f4fbf4;
+    }
+
+    .sidebar button {
+      padding: 12px;
+      background: rgba(0, 255, 0, 0.05);
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00ff00;
+      backdrop-filter: blur(5px);
+      text-align: left;
+    }
+
+    .sidebar button:hover {
+      background-color: #00ff00;
+      color: black;
+      transform: scale(1.02);
+    }
+
+    .main-content {
+      flex: 1;
+      border: 2px solid #00ff00;
+      padding: 30px;
+      border-radius: 12px;
+      background: rgba(0, 255, 0, 0.05);
+      box-shadow: 0 0 20px #00ff00;
+      backdrop-filter: blur(5px);
+      overflow-y: auto;
+      animation: fadeIn 1s ease;
+      font-size: 18px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-button {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 10px 20px;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00ff00;
+      backdrop-filter: blur(5px);
+    }
+
+     .back-button:hover,
+    .back-button:active {
+      background-color: #00ff00;
+      color: black;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #00ff00;
+    }
+
+    @media screen and (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 20px;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .sidebar button {
+        flex: 1 1 40%;
+        margin: 5px;
+        text-align: center;
+      }
+    }
+     h1 {
+    font-size: 36px;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 4px solid #00ff00;
+    animation: typing 3s steps(30) 1s forwards, blinkCaret 0.75s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes blinkCaret {
+    50% { border-color: transparent; }
+  }
+
+  /* Floating AI Chat Bubble */
+  .chat-bubble {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: rgba(0, 255, 0, 0.7);
+    color: #00ff00;
+    padding: 15px;
+    border-radius: 20px;
+    font-size: 16px;
+    display: none;
+    opacity: 0;
+    animation: chatBubbleShow 2s forwards;
+  }
+
+  @keyframes chatBubbleShow {
+    from { opacity: 0; bottom: 0; }
+    to { opacity: 1; bottom: 30px; }
+  }
+
+  .chat-bubble.active {
+    display: block;
+  }
+
+ 
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+
+  </style> 
+
+
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+
+  <div class="container">
+    <div class="sidebar">
+      <h1>Quick Access</h1>
+      <button onclick="showInfo('troubleshooting')">🛠 Troubleshooting</button>
+      <button onclick="showInfo('help')">❓ Help Center</button>
+      <button onclick="showInfo('About')">📖 About</button>
+      <button onclick="showInfo('support')">📞 Contact Support</button>
+      <button onclick="showInfo('others')">🌟 Other Resources</button>
+      <a href="index.html" class="back-button">← Back</a>
+    </div>
+
+    <div class="main-content" id="infoBox">
+      <p>Select an option on the left to view details.</p>
+    </div>
+  </div>
+
+  <script>
+    const infoBox = document.getElementById('infoBox');
+    function showInfo(section) {
+      let content = '';
+      if (section === 'troubleshooting') {
+       content = `
+  <h2>Troubleshooting</h2>
+  <p>
+    🛠 <strong>Having an issue?</strong> Don’t worry — we’ve got your back! Here are a few quick tips to get things back on track:<br><br>
+
+    🔄 <strong>App not responding?</strong><br>
+    Try restarting the app. This resolves most temporary glitches instantly.<br><br>
+
+    🧹 <strong>Lag or slow performance?</strong><br>
+    Clear the app cache from your device settings to give it a fresh boost.<br><br>
+
+    🌐 <strong>Page not loading?</strong><br>
+    Check your internet connection. A stable Wi-Fi or mobile data connection works best.<br><br>
+
+    📕 <strong>Textbook not opening?</strong><br>
+    Make sure the book is fully downloaded. If not, try reopening or reselecting the grade/subject.<br><br>
+
+    ❓ <strong>AI not responding?</strong><br>
+    Sometimes the AI may take a few seconds to fetch answers. If delayed, refresh the page or retry your question.<br><br>
+
+    💡 <strong>Still stuck?</strong><br>
+    Reach out to our support team anytime. We’re here to help you study smarter, not harder!<br><br>
+
+    Happy learning! 🚀
+  </p>
+`;
+
+      } else if (section === 'help') {
+        content = `
+  <h2>Help Center</h2>
+  <p>
+    ❓ <strong>Need Help?</strong> You're never alone! Our Help Center is your 24/7 buddy for mastering the app experience.<br><br>
+
+    💼 <strong>How-to Guides:</strong><br>
+    New here? No worries! Step-by-step tutorials walk you through everything — from opening a book to chatting with the AI assistant like a pro.<br><br>
+
+    📚 <strong>Feature Walkthroughs:</strong><br>
+    Discover all the app's powerful tools — like AI Q&A, book navigation, grade selection, and more.<br><br>
+
+    🧠 <strong>FAQ Vault:</strong><br>
+    Got questions? We've probably already answered them! Check our FAQs for quick fixes and clear answers.<br><br>
+
+    📩 <strong>Need Personal Help?</strong><br>
+    Just one tap away — contact support directly through our in-app form, email, or phone. Real humans. Real help. Real fast.<br><br>
+
+    🚀 <strong>Learning made easy, supported completely.</strong><br>
+    Explore the Help Center, get instant clarity, and keep your learning journey smooth and unstoppable.
+  </p>
+`;
+
+      } else if (section === 'About') {
+      content = `
+  <h2>About</h2>
+  <p>
+    📚 <strong>About the App</strong><br><br>
+    Welcome to your ultimate digital learning companion, tailor-made for <strong>Tamil Nadu State Board students (English Medium)</strong> from <strong>Grades 6 to 12</strong>.<br><br>
+
+    This app bridges traditional learning with the power of modern technology to make self-study more effective, accessible, and engaging.<br><br>
+
+    At its core, the app offers a complete digital library of school textbooks, neatly organized by grade and subject. Students can simply tap on a book to open an interactive reading environment.<br><br>
+
+    Once inside, the screen is intelligently split into two sections:<br><br>
+
+    🔖 <strong>Left Side – Scrollable Textbook Viewer:</strong><br>
+    Students can read and navigate through the textbook seamlessly, just by scrolling up and down — but better than a physical book, with smoother navigation and no need to carry physical copies.<br><br>
+
+    🤖 <strong>Right Side – AI-Powered Assistant:</strong><br>
+    This is where learning becomes truly dynamic. Students can type in any question related to the textbook, and our smart AI model instantly analyzes the content and provides clear, accurate, and syllabus-aligned answers.<br><br>
+
+    Whether it’s understanding a tough concept, revising for exams, or clarifying a doubt — the AI assistant is always ready to help.<br><br>
+
+    By integrating direct access to books with intelligent question-answering, the app empowers students to take control of their learning at their own pace.<br><br>
+
+    No distractions, no confusion — just focused study backed by cutting-edge AI.
+  </p>
+`;
+
+      } else if (section === 'support') {
+        content = `
+  <h2>Contact Support</h2>
+  <p>
+    📞 <strong>We’ve Got Your Back!</strong><br><br>
+
+    Whether you’re stuck, confused, or just need a little nudge — our support team is ready to help you out, fast and friendly!<br><br>
+
+    💬 <strong>Talk to Us:</strong><br>
+    • Phone: +91 9025026283<br>
+    • Phone: +91 9994856903<br>
+    • Email: priyadharshinik@gmail.com<br><br>
+
+    🤝 <strong>Real Humans. Real Help.</strong><br>
+    No bots. No waiting forever. Just dedicated folks who care about your learning journey.<br><br>
+
+    🚨 <strong>Pro Tip:</strong><br>
+    Reach out anytime — whether it’s a technical hiccup or a curious “How does this work?” We’re here with answers and smiles!<br><br>
+
+    🌟 Let’s make learning smoother — together.
+  </p>
+`;
+
+      } else if (section === 'others') {
+        content = `
+  <h2>Other Resources</h2>
+  <p>
+    🌟 <strong>Expand Your Learning Universe!</strong><br><br>
+
+    Our app is packed with more than just textbooks and AI support. Dive into a world of resources designed to enhance your knowledge and foster collaborative learning!<br><br>
+
+    📚 <strong>Community Forums:</strong><br>
+    Join discussions, ask questions, and connect with fellow students and educators to share tips, ideas, and solutions.<br><br>
+
+    🎥 <strong>Tutorials & Guides:</strong><br>
+    Access video tutorials, step-by-step guides, and self-paced learning materials to help you get the most out of the app.<br><br>
+
+    🧑‍🏫 <strong>Study Groups:</strong><br>
+    Collaborate with peers in our interactive study groups, where you can discuss topics, work on assignments, and tackle challenges together.<br><br>
+
+    💬 <strong>Expert Insights:</strong><br>
+    Get expert advice and academic tips from educators and industry professionals to stay ahead in your studies.<br><br>
+
+    📖 <strong>Additional Resources:</strong><br>
+    Explore additional reading material, sample papers, and study references to ensure you're always prepared and ready to succeed.<br><br>
+
+    🚀 <strong>Keep Pushing Forward!</strong><br>
+    No matter where you are in your learning journey, these resources will help guide you to the next level of success!
+  </p>
+`;
+
+      }
+      infoBox.innerHTML = content;
+    }
+
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 150; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+
+      const size = Math.random() * 2 + 1;
+      const duration = Math.random() * 60 + 20;
+      const opacity = Math.random() * 0.8 + 0.2;
+      const top = Math.random() * 100;
+      const left = Math.random() * 100;
+      const translateX = Math.random() * 200 - 100;
+      const translateY = Math.random() * 200 - 100;
+
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${top}%`;
+      star.style.left = `${left}%`;
+      star.style.opacity = opacity;
+      star.style.animation = `twinkle ${Math.random() * 2 + 1}s infinite alternate ease-in-out, moveStar-${i} ${duration}s linear infinite`;
+
+      const keyframes = `
+        @keyframes moveStar-${i} {
+          from { transform: translate(0, 0); }
+          to { transform: translate(${translateX}px, ${translateY}px); }
+        }
+      `;
+      document.styleSheets[0].insertRule(keyframes, document.styleSheets[0].cssRules.length);
+      starsContainer.appendChild(star);
+    }
+  </script>
+</body>
+</html>

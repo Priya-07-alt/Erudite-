@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northern Lights Login System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: #000;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        
+        .cosmic-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #000000 0%, #05103a 100%);
+            z-index: -2;
+        }
+        
+    
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+    
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 3s infinite alternate;
+        }
+        
+    
+        .aurora {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(57, 255, 20, 0.1) 40%,
+                rgba(57, 255, 20, 0.3) 60%,
+                rgba(123, 31, 162, 0.1) 80%,
+                rgba(123, 31, 162, 0) 100%
+            );
+            opacity: 0.6;
+            filter: blur(40px);
+            transform-origin: bottom;
+            animation: aurora-wave 15s ease-in-out infinite alternate;
+        }
+        
+        .aurora2 {
+            height: 45%;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(123, 31, 162, 0.1) 40%,
+                rgba(123, 31, 162, 0.3) 60%,
+                rgba(57, 255, 20, 0.1) 80%,
+                rgba(57, 255, 20, 0) 100%
+            );
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+        
+        .aurora3 {
+            height: 30%;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(57, 255, 20, 0.1) 30%,
+                rgba(57, 255, 20, 0.3) 50%,
+                rgba(123, 31, 162, 0.2) 70%,
+                rgba(123, 31, 162, 0) 100%
+            );
+            animation-delay: -10s;
+            animation-duration: 25s;
+        }
+        
+    
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.3; transform: scale(0.9); }
+        }
+        
+        
+        @keyframes aurora-wave {
+            0% {
+                transform: scaleX(1.0) translateX(-5%);
+            }
+            50% {
+                transform: scaleX(1.1) translateX(5%);
+            }
+            100% {
+                transform: scaleX(1.0) translateX(-5%);
+            }
+        }
+        
+        .card {
+            width: 400px;
+            height: 500px;
+            background: rgba(5, 16, 58, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(45, 241, 10, 0.802);
+            border: 1px solid rgba(123, 31, 162, 0.2);
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+        }
+        
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(57, 255, 20, 0.3);
+            background: rgba(5, 16, 58, 0.5);
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        input:focus {
+            background: rgba(5, 16, 58, 0.7);
+            border-color: rgba(57, 255, 20, 0.6);
+            box-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: linear-gradient(45deg, #39ff14, #7b1fa2);
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(57, 255, 20, 0.3);
+        }
+        
+        .switch-form {
+            margin-top: 20px;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .switch-form span {
+            color: #39ff14;
+            text-decoration: underline;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-bg"></div>
+    <div class="stars" id="stars"></div>
+    
+    <div class="card">
+        <!-- Login Form -->
+        <div id="login-form">
+            <h1>Login</h1>
+            <div class="form-group">
+                <input type="text" placeholder="Username" id="login-username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" id="login-password" required>
+            </div>
+            <button onclick="login()">Login</button>
+            <div class="switch-form">
+                Don't have an account? <span onclick="showRegisterForm()">Register</span>
+            </div>
+        </div>
+        
+        
+        <div id="register-form" class="hidden">
+            <h1>Register</h1>
+            <div class="form-group">
+                <input type="text" placeholder="Username" id="register-username" required>
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Email" id="register-email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" id="register-password" required>
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Confirm Password" id="register-confirm-password" required>
+            </div>
+            <button onclick="register()">Register</button>
+            <div class="switch-form">
+                Already have an account? <span onclick="showLoginForm()">Login</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    
+        function createStars() {
+            const stars = document.getElementById('stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDuration = Math.random() * 3 + 2 + 's';
+                stars.appendChild(star);
+            }
+        }
+        
+    
+        function createAurora() {
+            const stars = document.getElementById('stars');
+            
+        
+            const aurora1 = document.createElement('div');
+            aurora1.className = 'aurora';
+            stars.appendChild(aurora1);
+            
+            const aurora2 = document.createElement('div');
+            aurora2.className = 'aurora aurora2';
+            stars.appendChild(aurora2);
+            
+            const aurora3 = document.createElement('div');
+            aurora3.className = 'aurora aurora3';
+            stars.appendChild(aurora3);
+        }
+        
+        
+        createStars();
+        createAurora();
+        
+        
+        function showRegisterForm() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+        }
+        
+        function showLoginForm() {
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+        
+        
+        function login() {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+    
+    if(!username || !password) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if(user) {
+        alert('Login successful!');
+    
+        //window.location.href = "dashboard.html?username=" + username;
+        window.location.href = "index.html?username=" + username;
+
+    } else {
+        alert('Invalid username or password');
+    }
+}
+        
+        function register() {
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            if(!username || !email || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if(password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            
+            if(users.some(u => u.username === username)) {
+                alert('Username already exists');
+                return;
+            }
+            
+            users.push({
+                username,
+                email,
+                password
+            });
+            
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Registration successful! Please login.');
+            showLoginForm();
+        }
+
+
+
+    </script>
+</body>
+</html>
